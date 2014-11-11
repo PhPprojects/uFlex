@@ -10,6 +10,7 @@ namespace tests;
 
 
 use ptejada\uFlex\Collection;
+use ptejada\uFlex\DB;
 use ptejada\uFlex\User;
 
 class UserTest extends \PHPUnit_Framework_TestCase {
@@ -24,7 +25,8 @@ class UserTest extends \PHPUnit_Framework_TestCase {
         $_COOKIE = array();
 
         $this->user = new User();
-        $this->user->config->database->dsn = 'sqlite::memory:';
+        $this->user->setDB(new DB(new \PDO('sqlite::memory:')));
+//        $this->user->config->database->dsn = 'sqlite::memory:';
 
         $this->user->start();
 

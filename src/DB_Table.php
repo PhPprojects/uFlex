@@ -13,9 +13,9 @@ class DB_Table
     /** @var  Log - Log errors and report */
     public $log;
     /** @var string - The table name */
-    private $tableName = '';
+    protected $tableName = '';
     /** @var DB - The DB connection session */
-    private $db;
+    protected $db;
 
     /**
      * Initializes a database table object
@@ -217,5 +217,15 @@ class DB_Table
     public function getLastInsertedID()
     {
         return $this->db->getLastInsertedID();
+    }
+
+    /**
+     * Get the database connection object
+     *
+     * @return DB
+     */
+    public function getDB()
+    {
+        return $this->db;
     }
 }

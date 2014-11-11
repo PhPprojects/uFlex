@@ -33,13 +33,17 @@ class DB
      */
     public function __construct($hostOrDSN = '', $dbName = '')
     {
-        if (!$dbName) {
-            // add full DSN string
-            $this->dsn = $hostOrDSN;
+        if ($hostOrDSN instanceof \PDO) {
+            $this->connection = $hostOrDSN;
         } else {
-            // Add the default DB credentials for MySQL
-            $this->host = $hostOrDSN;
-            $this->dbName = $dbName;
+            if (!$dbName) {
+                // add full DSN string
+                $this->dsn = $hostOrDSN;
+            } else {
+                // Add the default DB credentials for MySQL
+                $this->host = $hostOrDSN;
+                $this->dbName = $dbName;
+            }
         }
 
         $this->log = new Log('DB');

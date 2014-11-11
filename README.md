@@ -138,6 +138,29 @@ Below is an excerpt from the PHP class file which lists the customizable `config
     )
 ```
 
+It is also possible to use an existing PDO connection
+
+```php
+<?php
+    include('/path/to/uflex/directory/autoload.php');
+
+    // Instantiate the User object
+    $user = new ptejada\uFlex\User();
+
+    // Add database connection
+    $db = new ptejada\uFlex\DB( $existingPDO );
+    $user->setDB($db);
+
+    /*
+     * You can update any customizable property of the class before starting the object
+     * construction process
+     */
+
+    //Start object construction
+    $user->start();
+?>
+```
+
 ## Understanding Collections
 
 A `Collection` is an object representation of an array. `Collection`s have many uses throughout this project and are

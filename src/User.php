@@ -235,35 +235,18 @@ class User extends UserBase
     public function start($login = true)
     {
         if (!($this->db instanceof DB)) {
-            // Updating the predefine error logs
-            $this->log->addPredefinedError($this->errorList);
 
             // Instantiate the Database object
             if ($this->config->database->dsn) {
-                $this->db = new DB($this->config->database->dsn);
+                $db = new DB($this->config->database->dsn);
             } else {
-                $this->db = new DB($this->config->database->host, $this->config->database->name);
+                $db = new DB($this->config->database->host, $this->config->database->name);
             }
 
-            // Configure the database object
-            $this->db->setUser($this->config->database->user);
-            $this->db->setPassword($this->config->database->password);
-
-            // Link logs
-            $this->db->log = $this->log;
-
-            //Instantiate the table DB object
-            $this->table = $this->db->getTable($this->config->userTableName);
-
-            // Instantiate and configure the cookie object
-            $this->cookie = new Cookie($this->config->cookieName);
-            $this->cookie->setHost($this->config->cookieHost);
-            $this->cookie->setPath($this->config->cookiePath);
-            $this->cookie->setLifetime($this->config->cookieTime);
-
-            // Instantiate the session
-            $this->session = new Session($this->config->userSession, $this->log);
-
+            /*
+             * Configure the object with the database object
+             */
+            $this->setDB($db);
         }
 
         // Link the session with the user data
@@ -747,5 +730,52 @@ class User extends UserBase
         $this->session->data = $this->config->userDefaultData->toArray();
         //Link the new session namespace to the internal data array
         $this->_data =& $this->session->data->toArray();
+    }
+
+    /**
+     * Set a predefined database connection
+     *
+     * @param DB $db
+     *
+     * @throws \Exception
+     */
+    public function setDB(DB $db)
+    {
+        if ($this->db instanceof DB) {
+            throw new \Exception('Database object already initialized');
+        } else {
+            $this->db = $db;
+
+            // Updating the predefine error logs
+            $this->log->addPredefinedError($this->errorList);
+
+            // Configure the database object
+            $this->db->setUser($this->config->database->user);
+            $this->db->setPassword($this->config->database->password);
+
+            // Link logs
+            $this->db->log = $this->log;
+
+            //Instantiate the table DB object
+            $this->table = $this->db->getTable($this->config->userTableName);
+
+            // Instantiate and configure the cookie object
+            $this->cookie = new Cookie($this->config->cookieName);
+            $this->cookie->setHost($this->config->cookieHost);
+            $this->cookie->setPath($this->config->cookiePath);
+            $this->cookie->setLifetime($this->config->cookieTime);
+
+            // Instantiate the session
+            $this->session = new Session($this->config->userSession, $this->log);
+        }
+    }
+
+    /**
+     * Get the internal DB object
+     * @return DB
+     */
+    public function getDB()
+    {
+        return $this->db;
     }
 }

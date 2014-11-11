@@ -45,5 +45,15 @@ class DBTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf('ptejada\uFlex\DB_TAble', $table, 'Should be an instance of DBTable');
     }
 
+    public function testPDOwrapper()
+    {
+        $pdo = new \PDO('sqlite::memory:');
+        $db = new DB($pdo);
+
+        $this->assertInstanceOf('PDO', $db->getConnection(), 'Successfully connects to DB');
+        $this->assertFalse($db->log->hasError(), 'There should be no error');
+        $this->assertNotEmpty($db->log->getReports(), 'There should some report entries');
+    }
+
 }
  
